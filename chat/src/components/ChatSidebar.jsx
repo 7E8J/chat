@@ -3,7 +3,7 @@ import React from 'react';
 const ChatSidebar = ({ rooms, onRoomClick }) => {
   return (
     <aside id="chat-sidebar">
-      <h2>Chat App with socket.io + React</h2>
+      <h2>Customer Chat</h2>
       <ul>
         {rooms.map((room) => (
           <li key={room}>

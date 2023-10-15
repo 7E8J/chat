@@ -19,13 +19,12 @@ function App() {
   const handleRoomClick = (room) => {
     setCurrentRoom(room);
     console.log(room);
-    socket.emit('join-room', room); // เมื่อคลิกห้อง, ส่งข้อมูลไปยัง Socket.IO
+    socket.emit('join-room', room);
   };
 
   useEffect(() => {
     socket.on('chat:message', handleNewMessage);
 
-    // เมื่อ component ถูก unmounted, ให้ยกเลิกการตรวจสอบข้อความ
     return () => {
       socket.off('chat:message', handleNewMessage);
     };

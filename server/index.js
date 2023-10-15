@@ -1,29 +1,33 @@
-import express from 'express'
-import { createServer } from 'node:http'
-import { Server } from 'socket.io'
+import express from 'express';
+import { MongoClient } from 'mongodb';
+import { createServer } from 'node:http';
 
+// MongoClient
+const uri = "mongodb+srv://7e8jdev:J7VR39k1@demo.emnbjcx.mongodb.net/";
+const client = new MongoClient(uri);
+
+// Express server
 const app = express()
-
 const server = createServer(app)
-const io = new Server(server, {
-  cors: {
-    origin: 'http://localhost:5173',
-  },
+
+app.use(express.json());
+app.get('/user', async (req, res) => {
+  try {
+    await client.connect();
+
+    const data = await client.db('demo').collection('user').find({}).toArray();
+
+    client.close();
+
+    res.json(data);
+  } catch (error) {
+    console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
+    res.status(500).json({ error: 'เกิดข้อผิดพลาดในการดึงข้อมูล' });
+  }
 })
 
-io.on('connection', (socket) => {
-  console.log('a user connected')
-
-  socket.on('join-room', (room) => {
-    socket.join(room);
-    console.log(`User joined room: ${room}`);
-
-    socket.on('chat:message', (msg) => {
-      console.log('message: ' + JSON.stringify(msg));
-      io.to(room).emit('chat:message', msg);
-    });
-  });
-})
+// WebSocket client
+io.on
 
 const APP_PORT = 5555
 
